@@ -1,0 +1,96 @@
+.normal { background-color: #A8A77A; }
+.fire { background-color: #EE8130; }
+.water { background-color: #6390F0; }
+.electric { background-color: #F7D02C; }
+.grass { background-color: #7AC74C; }
+.ice { background-color: #96D9D6; }
+.fighting { background-color: #C22E28; }
+.poison { background-color: #A33EA1; }
+.ground { background-color: #E2BF65; }
+.flying { background-color: #A98FF3; }
+.psychic { background-color: #F95587; }
+.bug { background-color: #A6B91A; }
+.rock { background-color: #B6A136; }
+.ghost { background-color: #735797; }
+.dragon { background-color: #6F35FC; }
+.dark { background-color: #705746; }
+.steel { background-color: #B7B7CE; }
+.fairy { background-color: #D685AD; }
+
+*{
+    margin: 10;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.arena{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    justify-content: center;
+    position: relative;
+}
+.pokemon{
+    scale: 1.4;
+    position: absolute;
+    transition: all 0.2s ease-in-out;
+}
+.info{
+    h4,p{
+        display: none;
+    }
+}
+
+.info:hover{
+    h4,p{
+        display: inline;
+    }
+}
+
+.sprite1,.info1{
+    scale: 1.8;
+    bottom: 50px;
+    left: 140px;
+    grid-row: 2/3;
+    grid-column: 1/2;
+    margin: 20px;
+}
+.sprite2,.info2{
+    scale: 1;
+    top: 40px;
+    right: 100px;
+    grid-row: 1/2;
+    grid-column: 2/3;
+    margin: 20px;
+}
+
+.control{
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.moves{
+    top: 20px;
+    position: absolute;
+    display: flex;
+    /* grid-template-columns: repeat(4, 1fr); */
+    /* grid-template-rows: 100px; */
+    align-items: center;
+    width: 98%;
+    height: 100px;
+    justify-content: space-evenly;
+    align-items: center;
+    /* gap: 30px; */
+}
+.moves>h3{
+    background-color: lightcyan;
+    display: flex;
+    height: 50%;
+    width: 20%;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+}
+.moves>h3:hover{
+    background-color: gray;
+}
+

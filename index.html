@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<style>
+    p{
+        font-size: smaller;
+    }
+</style>
+
+<body>
+
+    <div class="arena" style="margin: auto; width: 98%; height: 350px; background: rgb(215, 215, 215);">
+
+        <div class="playerside" style="margin: 10px; grid-row: 1/2; grid-column: 1/2; display: flex; justify-content: start; align-items: start; ">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+        </div>
+        
+        <!-- 1111111 -->
+
+        <div class="poke_area1">
+            <img class="pokemon sprite1"></img> 
+            <div class="info info1" style="width: 100%; height: 10l0%; scale: 1;">
+                <h4 class="poke_name1"></h4>
+                <br><p class="type type1"> </p>
+                <br><p class="def1"></p>
+                <br><p class="atk1"></p>
+                <br><p class="speed1"></p>
+            </div>
+        </div>
+   
+        <!-- 22222222 -->
+
+        <br><img class="pokemon sprite2"></img>
+        <div class="info info2" style="width: 100%; height: 100%;">
+            <h4 class="poke_name2"></h4>
+            <br><p class="type type2"> </p>
+            <br><p class="speed2"></p>
+        </div>
+
+        <div class="opponentside" style="margin: 0px; grid-row: 2/3; grid-column: 2/3; display: flex; align-items: end; justify-content: end; flex-wrap:wrap ;">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" alt="">
+        </div>
+    </div>
+    
+
+    <div class="control" style="margin: auto; width: 98%; height: 550px; background: lightseagreen;">
+        <div class="moves">
+            <h3 class="move1">move1</h1>
+            <h3 class="move2">move2</h1>
+            <h3 class="move3">move3</h1>
+            <h3 class="move4">move4</h1>
+        </div> 
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
