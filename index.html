@@ -1,75 +1,54 @@
-const sprite1 = document.querySelector(".sprite1");
-const sprite2 = document.querySelector(".sprite2");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Showdown Clone</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="battle_arena" style="font-weight: 100%; height: 70vh;">
+        <div class="user_pokemon"">
+            <img class="user_current_pokemon pokemon" src="" alt="user pokemon">
+            <div class="stat_show">
+                  
+            </div>
+        </div>
+        <div class="user_pokemon_balls" ></div>
 
-const poke_name1 = document.querySelector(".poke_name1");
-const poke_name2 = document.querySelector(".poke_name2");
-
-const type_p1 = document.querySelector(".type1");
-const type_p2 = document.querySelector(".type2");
-const def1 = document.querySelector(".def1");
-const atk1 = document.querySelector(".atk1");
-const speed1 = document.querySelector(".speed1");
-const def2 = document.querySelector(".def2");
-const atk2 = document.querySelector(".atk2");
-const speed2 = document.querySelector(".speed2");
-
-const move1 = document.querySelector(".move1");
-const move2 = document.querySelector(".move2");
-const move3 = document.querySelector(".move3");
-const move4 = document.querySelector(".move4");
-
-let op_move1 
-let op_move2 
-let op_move3 
-let op_move4 
-
-let ran1 = Math.floor(Math.random() * 721) + 1;
-let ran2 = Math.floor(Math.random() * 721) + 1;
-
-f1 = fetch(`https://pokeapi.co/api/v2/pokemon/${ran1}`);
-f2 = fetch(`https://pokeapi.co/api/v2/pokemon/${ran2}`);
-type_p1.innerHTML = "";
-type_p2.innerHTML = "";
-
-f1.then((res) => {
-  res.json().then((pokemon) => {
-    pokemon.types.map((t) => {
-      type_p1.innerHTML += t.type.name + " ";
-      type_p1.classList = t.type.name;
-    });
-
-    atk1.innerHTML = "atk- " + pokemon.stats[1].base_stat;
-    def1.innerHTML = "def- " + pokemon.stats[2].base_stat;
-    speed1.innerHTML = "spd- " + pokemon.stats[5].base_stat;
-
-    sprite1.src = pokemon.sprites.other.showdown.back_default;
-    poke_name1.innerHTML = pokemon.species.name;
-
-    const poke_moves1 = pokemon.moves.map((i) => i.move.name);
-    const four_moves = [move1, move2, move3, move4];
-
-    four_moves.map((el) => {
-      el.innerHTML = poke_moves1[Math.floor(Math.random() * poke_moves1.length)];
-    });
-  });
-}).catch((err) => console.log(err));
-
-f2.then((res) => {
-  res.json().then((pokemon) => {
-    pokemon.types.map((t) => {
-      type_p2.innerHTML += t.type.name + " ";
-      type_p2.classList = t.type.name;
-    });
-
-    speed2.innerHTML = "spd- " + pokemon.stats[5].base_stat;
-    sprite2.src = pokemon.sprites.other.showdown.front_default;
-    poke_name2.innerHTML = pokemon.species.name;
-
-    const poke_moves2 = pokemon.moves.map((i) => i.move.name);
-    const four_moves = [op_move1, op_move2, op_move3, op_move4];
-
-    four_moves.map((el) => {
-      el.innerHTML = poke_moves2[Math.floor(Math.random() * poke_moves2.length)];
-    });
-  });
-}).catch((err) => console.log(err));
+        <div class="oppo_pokemon" style="background-color: cornflowerblue;">
+            <img class="oppo_current_pokemon pokemon" src="" alt="opponent pokemon">
+        </div>
+        <div class="oppo_pokemon_balls" style="background-color: cadetblue;"></div>
+    </div>
+    <div class="user_moves"  style="font-weight: 100%; height: 15vh;">
+        <div class="first_move"></div>
+        <div class="second_move"></div>
+        <div class="third_move"></div>
+        <div class="fourth_move"></div>
+    </div>
+    <div class="user_pokemons"  style="font-weight: 100%; height: 15vh;">
+        <div>
+            <img src="" alt="" class="userpoke 0 pokemon">
+        </div>
+        <div>
+            <img src="" alt="" class="userpoke 1 pokemon">
+        </div>
+        <div>
+            <img src="" alt="" class="userpoke 2 pokemon">
+        </div>
+        <div>
+            <img src="" alt="" class="userpoke 3 pokemon">
+        </div>
+        <div>
+            <img src="" alt="" class="userpoke 4 pokemon">
+        </div>
+        <div>
+            <img src="" alt="" class="userpoke 5 pokemon">
+        </div>
+    </div>
+    
+    <script src="confuse.js"></script>
+    <!-- <script src="script.js"></script> -->
+</body>
+</html>
