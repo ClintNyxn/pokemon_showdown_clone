@@ -1,0 +1,55 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.full-display{
+    width: 100%;
+    height: 100vh;
+    background-color: lightblue;
+}
+
+.battle_arena{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+.user_pokemon{
+    grid-column: 1/2;
+    grid-row: 2/5;
+}
+.oppo_pokemon{
+    grid-column: 2/-1;
+    grid-row: 1/4;
+}
+.user_pokemon_balls{
+    grid-column: 1/2;
+    grid-row: 1/2;
+}
+.oppo_pokemon_balls{
+    grid-column: 2/-1;
+    grid-row: -2/-1;
+}
+
+
+.user_moves,.user_pokemons{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: lightseagreen;
+}
+
+.user_moves>div{
+    width: 200px;
+    height: 80px;
+    background-color: lightgrey;
+    border-radius: 10px;
+}
+.user_pokemons>div{
+    width: 150px;
+    height: 80px;
+    background-color: lightcoral;
+    border-radius: 10px;
+}
