@@ -24,3 +24,8 @@
 * Build a basic battle system
 * Improve UI/UX to more closely match Pokémon Showdown
 * Add team building functionality
+
+
+## Starting Wireframe Design
+<img width="999" height="851" alt="image" src="https://github.com/user-attachments/assets/c478b3a0-1ed2-43d7-b18a-cad51efd1633" />
+
