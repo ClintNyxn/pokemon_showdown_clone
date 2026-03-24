@@ -11,6 +11,19 @@ let user_pokemons = []
 let oppo_pokemons = []
 
 async function main(){
+    const stat_show = document.querySelector(".stat_show")
+    const type1 = document.querySelector(".type1")
+    const type2 = document.querySelector(".type2")
+    const hp = document.querySelector(".hp")
+    const name = document.querySelector(".name")
+    const atk = document.querySelector(".atk")
+    const def = document.querySelector(".def")
+    const satk = document.querySelector(".satk")
+    const sdef = document.querySelector(".sdef")
+    const speed = document.querySelector(".speed")
+    
+
+    
     // get 6 pokemons on each side 
     for(let i=0;i<12;i++){
         if (user_pokemons.length < 6){
@@ -27,6 +40,7 @@ async function main(){
     // user display pokmeon -> back_defualt and vice versa
     const x = document.querySelector(".user_current_pokemon")
     const y = document.querySelector(".oppo_current_pokemon")
+    
     x.src = (user_display_pokemon.sprites.other.showdown.back_default)
     y.src = (oppo_display_pokemon.sprites.other.showdown.front_default)
 
@@ -60,29 +74,34 @@ async function main(){
                 poke = (user_pokemons[pokemon.classList[1]])
             }
             
-            // if(poke.types.length == 1){
-            //     console.log(poke.types[0].type.name)
-            // }else{
-            //     console.log(poke.types[0].type.name)
-            //     console.log(poke.types[1].type.name)
-            // }
-                
+            let type = []
+            if(poke.types.length == 1){
+                type.push(poke.types[0].type.name)
+            }else{
+                type.push(poke.types[0].type.name)
+                type.push(poke.types[1].type.name)
+            }
 
-            poke_name = (poke.name)
-            poke_hp = (poke.stats[0].base_stat)
-            poke_atk = (poke.stats[1].base_stat)
-            poke_def = (poke.stats[2].base_stat)
-            poke_satk = (poke.stats[3].base_stat)
-            poke_sdef = (poke.stats[4].base_stat)
-            poke_speed = (poke.stats[5].base_stat)
+            name.innerHTML = poke.name
+            // hp = (poke.stats[0].base_stat)
+            atk.innerHTML = `atk - ${poke.stats[1].base_stat}` 
+            def.innerHTML = `def - ${poke.stats[2].base_stat}` 
+            satk.innerHTML = `special atk - ${poke.stats[2].base_stat}` 
+            sdef.innerHTML = `special def - ${poke.stats[2].base_stat}` 
+            .innerHTML = `def - ${poke.stats[2].base_stat}` 
+            def.innerHTML = `def - ${poke.stats[2].base_stat}` 
 
             // show stats and type
-            const stat_show = document.querySelector(".stat_show")
-            stat_show.innerHTML = '' 
-            stat_show.innerHTML +=  `name - ${poke_name} `
-            stat_show.innerHTML +=  `atk - ${poke_atk} `
-            stat_show.innerHTML +=  `def - ${poke_def} `
-            stat_show.innerHTML +=  `speed - ${poke_speed} `
+            
+            
+            type1.innerHTML = type[0]
+            type2.innerHTML = null
+            type1.classList = `${type[0]}`
+            if(type.length > 1){
+                type2.innerHTML = type[1]
+                type2.classList = `${type[1]}`
+            }
+            console.log()
         }) 
     });
     
