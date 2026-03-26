@@ -1,0 +1,27 @@
+/* .hide{
+    display: none;
+}
+
+.show{
+    display: block;
+} */
+
+
+.pokemon_array{
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    height: 100px;
+    width: 100%;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
+.stat_box{
+    font-size: small;
+    height: 100%;
+    width: 100px;
+    border: 1px solid black;
+}
