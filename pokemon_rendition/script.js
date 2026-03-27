@@ -8,7 +8,6 @@ async function getRandPokemon(){
 }
 
 function getStats(pokemon) {
-    let sprite = pokemon.sprites.other.showdown
     let name = pokemon.name
     let two = false
 
@@ -27,22 +26,19 @@ function getStats(pokemon) {
     let sdef = pokemon.stats[4].base_stat
     let speed = pokemon.stats[5].base_stat
     
-    return{sprite, name, two, type1, type2, hp, atk, def, satk, sdef, speed}
+    return{name, two, type1, type2, hp, atk, def, satk, sdef, speed}
 }
 
-
-
 async function main() { 
-    const curr_name = document.querySelector('.curr_name')  
-    const curr_sprite = document.querySelector('.curr_sprite')  
-    const curr_type1 = document.querySelector('.curr_type1')  
-    const curr_type2 = document.querySelector('.curr_type2')  
-    const curr_hp = document.querySelector('.curr_hp')  
-    const curr_atk = document.querySelector('.curr_atk')  
-    const curr_def = document.querySelector('.curr_def')  
-    const curr_satk = document.querySelector('.curr_satk')  
-    const curr_sdef = document.querySelector('.curr_sdef')  
-    const curr_speed = document.querySelector('.curr_speed')  
+    const show_name = document.querySelector('.show_name')  
+    const show_type1 = document.querySelector('.show_type1')  
+    const show_type2 = document.querySelector('.show_type2')  
+    const show_hp = document.querySelector('.show_hp')  
+    const show_atk = document.querySelector('.show_atk')  
+    const show_def = document.querySelector('.show_def')  
+    const show_satk = document.querySelector('.show_satk')  
+    const show_sdef = document.querySelector('.show_sdef')  
+    const show_speed = document.querySelector('.show_speed')  
 
 
     // get 6 pokemons on each side 
@@ -57,55 +53,112 @@ async function main() {
         }
     }
     
-    // display 0th as current pokemon //
-    setAsCurr(user_pokemons[1])
-    
-    async function setAsCurr(pokemon) {
-        curr_hp.innerHTML = await getStats(pokemon).hp
-        curr_name.innerHTML = await getStats(pokemon).name
-        
-        if (getStats(pokemon).two == true){
-            curr_type1.innerHTML = await getStats(pokemon).type1
-            curr_type2.innerHTML = await getStats(pokemon).type2 
-        }else{
-            curr_type1.innerHTML = await getStats(pokemon).type1
+    let user_curr_pokemon;
+    let oppo_curr_pokemon;
+
+    // display 0th as current pokemons//
+    let user_curr_pokemon_img = document.querySelector(".user_curr_pokemon_img")
+    let oppo_curr_pokemon_img = document.querySelector(".oppo_curr_pokemon_img")
+
+    function setAsCurr(who,pokemon) {
+        if (who == "user"){
+            user_curr_pokemon = pokemon
+
+            user_curr_pokemon_img.src = pokemon.sprites.other.showdown.back_default
+            getmoves(pokemon)
+        }else if (who == "oppo"){
+            oppo_curr_pokemon = pokemon
+
+            oppo_curr_pokemon_img.src = pokemon.sprites.other.showdown.front_default
         }
-        
-        curr_sprite.src = getStats(pokemon).sprite.front_default
-        curr_atk.innerHTML = `atk - ${getStats(pokemon).atk}`
-        curr_def.innerHTML = `def - ${getStats(pokemon).def}`
-        curr_satk.innerHTML = `satk - ${getStats(pokemon).satk}`
-        curr_sdef.innerHTML = `sdef - ${getStats(pokemon).sdef}`
-        curr_speed.innerHTML = `speed - ${getStats(pokemon).speed}`
     }
+    setAsCurr("user",user_pokemons[0])
+    setAsCurr("oppo",oppo_pokemons[0])
+    
 
     // display all in a line
-    function displayAllPokemon(){
-        const array_pokemon = document.querySelectorAll(".array_pokemon") 
+    const pokemon_array = document.querySelectorAll(".array_pokemon") 
 
+    function displayAllPokemon(){
         let i = 0 
         if (i < 6){
-            array_pokemon.forEach((pokemon)=>{
+            pokemon_array.forEach((pokemon)=>{
                 pokemon.src = user_pokemons[i].sprites.front_default 
                 i++
             })
         }
     }displayAllPokemon()
 
-    // function showInStatBox(hp, name, type1,type2,atk,def,satk,sdef,speed){
-    // }
     
     // click -> change //
+    pokemon_array.forEach( pokemon => {
+        pokemon.addEventListener('click',()=>{
+            index = (pokemon.classList[0]) 
+            setAsCurr("user",user_pokemons[index])
+        })
+    });
     
     // hover -> show stat-box //
-    const pokemons = document.querySelectorAll(".pokemon")
-    const stat_box = document.querySelector(".stat_box")
+    const every_pokemon = document.querySelectorAll(".pokemon")
 
-    // pokemons.forEach((pokemon)=>{
-    //     pokemon.addEventListener('mouseenter', (e)=>{
-    //         console.log(pokemon)
-    //     })
-    // })
+    every_pokemon.forEach((e)=>{
+        e.addEventListener('mouseenter', ()=>{
+            if (e.classList[0]=="user_curr_pokemon_img"){
+                p = user_curr_pokemon
+            }else if (e.classList[0] =="oppo_curr_pokemon_img"){
+                p = oppo_curr_pokemon
+            }else{
+                index = (e.classList[0])
+                p = (user_pokemons[index])
+            }
+            showInStatBox(p)
+        })
+    })
+
+    function showInStatBox(p){
+        stats = getStats(p)
+        show_hp.innerHTML = stats.hp
+        show_name.innerHTML = stats.name
+        
+        if (stats.two == true){
+            show_type1.innerHTML = stats.type1
+            show_type2.innerHTML = stats.type2 
+        }else{
+            show_type1.innerHTML = stats.type1
+            show_type2.innerHTML = ""
+        }
+        
+        show_atk.innerHTML = `atk - ${stats.atk}`
+        show_def.innerHTML = `def - ${stats.def}`
+        show_satk.innerHTML = `special atk - ${stats.satk}`
+        show_sdef.innerHTML = `special def - ${stats.sdef}`
+        show_speed.innerHTML = `speed - ${stats.speed}`
+    }
     
+    async function getmoves(pokemon){
+        move_set = (pokemon.moves)
+
+        moves = await Promise.all(move_set.map(x => fetch(x.move.url).then(res => res.json())))
+
+        let selected = moves
+        .filter(x => x.power != null || x.damage_class.name != "status")
+        .sort(() => Math.random() - 0.5)
+        .slice(0,4)
+        
+        const m = document.querySelectorAll('.move')
+
+        for(i=0;i<4;i++){
+            m[i].innerHTML = selected[i].name + " "
+            m[i].innerHTML += selected[i].power + " "
+            m[i].innerHTML +=selected[i].type.name + ' '
+            m[i].innerHTML += selected[i].accuracy
+        }
+        
+    }getmoves(user_curr_pokemon)
+        // name //
+        // type
+        // power
+        // accurace
+        // category
 
 }main()
