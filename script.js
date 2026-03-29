@@ -52,22 +52,22 @@ async function main() {
     }
   }
 
+
+  // display 0th as current pokemons//
   let user_curr_pokemon;
   let oppo_curr_pokemon;
 
-  // display 0th as current pokemons//
   let user_curr_pokemon_img = document.querySelector(".user_curr_pokemon_img");
   let oppo_curr_pokemon_img = document.querySelector(".oppo_curr_pokemon_img");
 
   function setAsCurr(who, pokemon) {
     if (who == "user") {
       user_curr_pokemon = pokemon;
-
       user_curr_pokemon_img.src = pokemon.sprites.other.showdown.back_default;
       getMoves(pokemon);
+
     } else if (who == "oppo") {
       oppo_curr_pokemon = pokemon;
-
       oppo_curr_pokemon_img.src = pokemon.sprites.other.showdown.front_default;
     }
   }
@@ -87,11 +87,15 @@ async function main() {
   }
   displayAllPokemon();
 
-  // click -> change //
+  // click -> select pokemon //
   pokemon_array.forEach((pokemon) => {
     pokemon.addEventListener("click", () => {
       index = pokemon.classList[0];
       setAsCurr("user", user_pokemons[index]);
+
+      // give a message about the change
+      const game_msg = document.querySelector(".game_message")
+      game_msg.innerHTML = `User switched to ${getStats(user_curr_pokemon).name}`
     });
   });
 
@@ -122,21 +126,24 @@ async function main() {
     if (x == "move") {
       stats = p;
       
-      
       show_name.innerHTML = stats.move_name;
       show_type1.innerHTML = stats.move_type;
       show_type1.classList = stats.move_type;
       show_type2.innerHTML = null;
       show_type2.classList = null;
+      show_satk.innerHTML = null 
+      show_sdef.innerHTML = null
+      show_speed.innerHTML = null
+
       show_atk.innerHTML = `base power - ${stats.power}`;
       show_def.innerHTML = `accuracy - ${stats.accuracy}`;
-
 
       show_speed.innerHTML = null;
       if (stats.priority > 0){
           show_sdef.innerHTML = `priority - ${stats.priority}`;
       }
-      
+
+
     } else if (x == "pokemon") {
       stats = getStats(p);
       show_hp.innerHTML = stats.hp;
@@ -194,10 +201,10 @@ async function main() {
     power = selected[i].power;
     accuracy = selected[i].accuracy;
     priority = selected[i].priority;
-
     
     return { move_name, move_type, power, accuracy, priority };
   }
+
   // hover over move to see move_stats in stat_box
   m.forEach((e) => {
     e.addEventListener("mouseenter", () => {
@@ -209,6 +216,23 @@ async function main() {
       stat_box[0].classList.remove("show");
     })
   });
+
+  // if i click a move, it should get calcualte damage
+    e.addEventListener('click', ()=>{
+      i = (e.classList[1])
+      curr_move_type = getMoveStats(i).move_type
+      curr_move_power = getMoveStats(i).power
+      
+      if(curr_move_type == getStats(user_curr_pokemon).type1 || curr_move_power == getStats(user_curr_pokemon).type2){
+        curr_move_stab = 1.5
+      }else{
+        curr_move_stab = 1
+      }
+      // calculate damage to be done
+      type_adv = 1
+      damage = (type_adv * curr_move_stab)* curr_move_power 
+    })
 }
+
 main();
 
