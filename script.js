@@ -4,6 +4,8 @@ async function getRandPokemon() {
 
   let dataPromise = await fetch(`${baseUrl}/${random_number}`);
   let pokemon = await dataPromise.json();
+  pokemon.max_hp = pokemon.stats[0].base_stat;
+  pokemon.current_hp = pokemon.max_hp;
   return pokemon;
 }
 
@@ -19,14 +21,16 @@ function getStats(pokemon) {
     two = true;
   }
 
-  let hp = pokemon.stats[0].base_stat;
+  let hp = pokemon.current_hp ?? pokemon.stats[0].base_stat;
+  let max_hp = pokemon.max_hp ?? pokemon.stats[0].base_stat;
+
   let atk = pokemon.stats[1].base_stat;
   let def = pokemon.stats[2].base_stat;
   let satk = pokemon.stats[3].base_stat;
   let sdef = pokemon.stats[4].base_stat;
   let speed = pokemon.stats[5].base_stat;
 
-  return { name, two, type1, type2, hp, atk, def, satk, sdef, speed };
+  return { name, two, type1, type2, hp, max_hp, atk, def, satk, sdef, speed };
 }
 
 async function main() {
@@ -40,12 +44,15 @@ async function main() {
   const show_sdef = document.querySelector(".show_sdef");
   const show_speed = document.querySelector(".show_speed");
 
+  let gameOver = false;
+
   function setMessage(text) {
     const game_msg = document.querySelector(".game_message");
-    game_msg.innerHTML = text;
+    game_msg.innerHTML += text + "<br>";
   }
-    let user_pokemons = [];
-    let oppo_pokemons = [];
+
+  let user_pokemons = [];
+  let oppo_pokemons = [];
 
   for (let i = 0; i < 12; i++) {
     if (user_pokemons.length < 6) {
@@ -89,14 +96,12 @@ async function main() {
 
   displayAllPokemon();
   
-  // click to pick pokemon
   pokemon_array.forEach((pokemon) => {
     pokemon.addEventListener("click", () => {
       index = pokemon.classList[0];
       setAsCurr("user", user_pokemons[index]);
 
-      const game_msg = document.querySelector(".game_message");
-      game_msg.innerHTML = `User switched to ${getStats(user_curr_pokemon).name}`;
+      setMessage(`User switched to ${getStats(user_curr_pokemon).name}`);
 
       CpuDecision();
     });
@@ -124,50 +129,58 @@ async function main() {
     });
   });
 
-  function showInStatBox(x, p) {
-    if (x == "move") {
-      stats = p;
-      show_hp.innerHTML = null;
-      show_name.innerHTML = stats.move_name;
-      show_type1.innerHTML = stats.move_type;
-      show_type1.classList = stats.move_type;
-      show_type2.innerHTML = null;
-      show_type2.classList = null;
-      show_satk.innerHTML = null;
-      show_sdef.innerHTML = null;
-      show_speed.innerHTML = null;
+function showInStatBox(x, p) {
+  if (x == "move") {
+    stats = p;
+    show_hp.innerHTML = null;
+    show_name.innerHTML = stats.move_name;
+    show_type1.innerHTML = stats.move_type;
+    show_type1.classList = stats.move_type;
+    show_type2.innerHTML = null;
+    show_type2.classList = null;
+    show_satk.innerHTML = null;
+    show_sdef.innerHTML = null;
+    show_speed.innerHTML = null;
 
-      show_atk.innerHTML = `base power - ${stats.power}`;
-      show_def.innerHTML = `accuracy - ${stats.accuracy}`;
+    show_atk.innerHTML = `base power - ${stats.power}`;
+    show_def.innerHTML = `accuracy - ${stats.accuracy}`;
 
-      if (stats.priority > 0) {
-        show_sdef.innerHTML = `priority - ${stats.priority}`;
-      }
-    } else if (x == "pokemon") {
-      stats = getStats(p);
-      show_hp.innerHTML = stats.hp;
-      show_name.innerHTML = stats.name;
-
-      if (stats.two == true) {
-        show_type1.innerHTML = stats.type1;
-        show_type1.classList = stats.type1;
-        show_type2.innerHTML = stats.type2;
-        show_type2.classList = stats.type2;
-      } else {
-        show_type1.innerHTML = stats.type1;
-        show_type1.classList = stats.type1;
-        show_type2.innerHTML = "";
-        show_type2.classList = "";
-      }
-
-      show_atk.innerHTML = `atk - ${stats.atk}`;
-      show_def.innerHTML = `def - ${stats.def}`;
-      show_satk.innerHTML = `special atk - ${stats.satk}`;
-      show_sdef.innerHTML = `special def - ${stats.sdef}`;
-      show_speed.innerHTML = `speed - ${stats.speed}`;
+    if (stats.priority > 0) {
+      show_sdef.innerHTML = `priority - ${stats.priority}`;
     }
-  }
 
+  } else if (x == "pokemon") {
+    stats = getStats(p);
+
+    let hpPercent = Math.floor((stats.hp / stats.max_hp) * 100);
+
+    show_hp.innerHTML = hpPercent + "%";
+
+    show_hp.style.width = hpPercent + "%";
+
+    show_hp.style.backgroundColor = "lightgreen";
+
+    show_name.innerHTML = stats.name;
+
+    if (stats.two == true) {
+      show_type1.innerHTML = stats.type1;
+      show_type1.classList = stats.type1;
+      show_type2.innerHTML = stats.type2;
+      show_type2.classList = stats.type2;
+    } else {
+      show_type1.innerHTML = stats.type1;
+      show_type1.classList = stats.type1;
+      show_type2.innerHTML = "";
+      show_type2.classList = "";
+    }
+
+    show_atk.innerHTML = `atk - ${stats.atk}`;
+    show_def.innerHTML = `def - ${stats.def}`;
+    show_satk.innerHTML = `special atk - ${stats.satk}`;
+    show_sdef.innerHTML = `special def - ${stats.sdef}`;
+    show_speed.innerHTML = `speed - ${stats.speed}`;
+  }
+}
   const m = document.querySelectorAll(".move");
 
   async function getMoves(pokemon) {
@@ -213,9 +226,10 @@ async function main() {
     return { move_name, move_type, power, accuracy, priority, category };
   }
 
-  function calculateDamage(who, move) {
+function calculateDamage(who, move) {
+  if (gameOver) return 0;
 
-    typeChart = {
+  typeChart = {
     normal:   { rock: 0.5, ghost: 0, steel: 0.5 },
     fire:     { grass: 2, ice: 2, bug: 2, steel: 2, fire: 0.5, water: 0.5, rock: 0.5, dragon: 0.5 },
     water:    { fire: 2, ground: 2, rock: 2, water: 0.5, grass: 0.5, dragon: 0.5 },
@@ -234,60 +248,84 @@ async function main() {
     dark:     { psychic: 2, ghost: 2, fighting: 0.5, dark: 0.5, fairy: 0.5 },
     steel:    { ice: 2, rock: 2, fairy: 2, fire: 0.5, water: 0.5, electric: 0.5, steel: 0.5 },
     fairy:    { fighting: 2, dragon: 2, dark: 2, fire: 0.5, poison: 0.5, steel: 0.5 }
-  };   
+  };
 
-    level = 50
-    random_factor = Math.random() * 0.15 + 0.85;
+  level = 50;
+  random_factor = Math.random() * 0.15 + 0.85;
 
-    if (who == "user") {
-      by_who = user_curr_pokemon;
-      to_who = oppo_curr_pokemon;
-    } else {
-      to_who = user_curr_pokemon;
-      by_who = oppo_curr_pokemon;
-    }
-
-    let move_type = getMoveStats(move).move_type;
-    let defender = getStats(to_who);
-
-    type_adv = 1;
-
-    if (typeChart[move_type] && typeChart[move_type][defender.type1] !== undefined) {
-      type_adv *= typeChart[move_type][defender.type1];
-    }
-
-    if (defender.two) {
-      if (typeChart[move_type] && typeChart[move_type][defender.type2] !== undefined) {
-        type_adv *= typeChart[move_type][defender.type2];
-      }
-    }
-
-    if (getMoveStats(move).category == "special") {
-      a = getStats(by_who).satk;
-      d = getStats(to_who).sdef;
-    } else if (getMoveStats(move).category == "physical") {
-      a = getStats(by_who).atk;
-      d = getStats(to_who).def;
-    }
-
-    if (
-      getMoveStats(move).move_type == getStats(by_who).type1 ||
-      getMoveStats(move).move_type == getStats(by_who).type2
-    ) {
-      curr_move_stab = 2;
-    } else {
-      curr_move_stab = 1;
-    }
-
-    let base = (((2 * level) / 5 + 2) * getMoveStats(move).power * a) / d / 50 + 2;
-
-    let damage = base * curr_move_stab * type_adv * random_factor;
-    damage = Math.floor(damage);
-
-    return damage;
+  if (who == "user") {
+    by_who = user_curr_pokemon;
+    to_who = oppo_curr_pokemon;
+  } else {
+    to_who = user_curr_pokemon;
+    by_who = oppo_curr_pokemon;
   }
 
+  let moveStats = getMoveStats(move);
+  let defender = getStats(to_who);
+
+  type_adv = 1;
+
+  if (typeChart[moveStats.move_type]?.[defender.type1] !== undefined) {
+    type_adv *= typeChart[moveStats.move_type][defender.type1];
+  }
+
+  if (defender.two) {
+    if (typeChart[moveStats.move_type]?.[defender.type2] !== undefined) {
+      type_adv *= typeChart[moveStats.move_type][defender.type2];
+    }
+  }
+
+  if (moveStats.category == "special") {
+    a = getStats(by_who).satk;
+    d = getStats(to_who).sdef;
+  } else {
+    a = getStats(by_who).atk;
+    d = getStats(to_who).def;
+  }
+
+  let stab =
+    moveStats.move_type == getStats(by_who).type1 ||
+    moveStats.move_type == getStats(by_who).type2
+      ? 2
+      : 1;
+
+  let base = (((2 * level) / 5 + 2) * moveStats.power * a) / d / 50 + 2;
+  let damage = Math.floor(base * stab * type_adv * random_factor);
+
+  to_who.current_hp -= damage;
+  if (to_who.current_hp < 0) to_who.current_hp = 0;
+
+  if (to_who.current_hp === 0) {
+    setMessage(`${getStats(to_who).name} fainted!`);
+
+    let pool = who == "user" ? oppo_pokemons : user_pokemons;
+    let alive = pool.filter((p) => getStats(p).hp > 0);
+
+    // ✅ GAME OVER CHECK
+    if (alive.length === 0) {
+      gameOver = true;
+
+      if (who == "user") {
+        setMessage("🎉 You win! All opponent Pokémon fainted!");
+      } else {
+        setMessage("💀 You lost! All your Pokémon fainted!");
+      }
+
+      return damage;
+    }
+
+    let next = alive[Math.floor(Math.random() * alive.length)];
+    setAsCurr(who == "user" ? "oppo" : "user", next);
+
+    setMessage(`${getStats(next).name} was sent out!`);
+  }
+
+  return damage;
+}
+
   async function CpuDecision() {
+    if (gameOver) return;
     if (getStats(oppo_curr_pokemon).hp > 0) {
       random = Math.floor(Math.random() * 5);
 
@@ -307,10 +345,10 @@ async function main() {
               m.type.name == getStats(oppo_curr_pokemon).type2)
         )[0];
 
-    let dmg = calculateDamage("oppo", stab_move);
-    let moveStats = getMoveStats(stab_move);
+        let dmg = calculateDamage("oppo", stab_move);
+        let moveStats = getMoveStats(stab_move);
 
-    setMessage(`${getStats(oppo_curr_pokemon).name} used ${moveStats.move_name} and dealt ${dmg} damage!`);
+        setMessage(`${getStats(oppo_curr_pokemon).name} used ${moveStats.move_name} and dealt ${dmg} damage!`);
 
       } else {
         let alive = oppo_pokemons.filter(
@@ -345,12 +383,12 @@ async function main() {
 
     e.addEventListener("click", () => {
       i = e.classList[1];
-    let dmg = calculateDamage("user", selected[i]);
-    let moveStats = getMoveStats(selected[i]);
+      let dmg = calculateDamage("user", selected[i]);
+      let moveStats = getMoveStats(selected[i]);
 
-    setMessage(`${getStats(user_curr_pokemon).name} used ${moveStats.move_name} for ${dmg} damage!`);
+      setMessage(`${getStats(user_curr_pokemon).name} used ${moveStats.move_name} for ${dmg} damage!`);
       
-    CpuDecision();
+      CpuDecision();
     });
   });
 }
