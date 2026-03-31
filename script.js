@@ -302,14 +302,13 @@ function calculateDamage(who, move) {
     let pool = who == "user" ? oppo_pokemons : user_pokemons;
     let alive = pool.filter((p) => getStats(p).hp > 0);
 
-    // ✅ GAME OVER CHECK
     if (alive.length === 0) {
       gameOver = true;
 
       if (who == "user") {
-        setMessage("🎉 You win! All opponent Pokémon fainted!");
+        setMessage("You win!!!!!");
       } else {
-        setMessage("💀 You lost! All your Pokémon fainted!");
+        setMessage("You lost!!!!!");
       }
 
       return damage;
