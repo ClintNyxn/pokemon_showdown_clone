@@ -10,12 +10,27 @@
   <body>
 
     <div class="battle_area">
+
       <div class="boxes">
         <img class="user_curr_pokemon_img pokemon" src="" alt=""/>
       </div>
 
       <div class="boxes">
         <img class="oppo_curr_pokemon_img pokemon" src="" alt=""/>
+        <div class="info_wrap">
+          <div class="info">
+            <i class ="fa fa-info" style="font-size: smaller;"></i>
+          </div>
+          <div class="info_box">
+            <p>for better type calculations, visit
+              <a href=""> Poke Calculator</a>
+            </p>
+            <br>
+            <p>To learn how to play, visit
+              <a href="">Offical Documentation</a>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -47,7 +62,7 @@
       <img src="" alt="" class="5 array_pokemon pokemon" />
     </div>
 
-    <div class="stat_box">
+    <div class="stat_box" style="background-color: white;">
       <p class="show_hp" style="width: 100%; background-color: lightgreen"></p>
       <span class="show_name" style="font-size: large; font-weight: 600"></span>
       <br />
@@ -65,9 +80,29 @@
       <span class="show_speed"></span>
     </div>
 
-    <div class="game_message" style="margin: 10px;"></div>
+    <div class="down" style="display: flex; justify-content: center; ">
+      
+    </div>
 
-    <div class="my_message" style="display: flex; justify-content: center; align-items: center; margin-top: 20px; color: lightseagreen; font-size: large;">Made with <i class="fa fa-heart" style="margin-left: 3px;"></i></div>
+
+    </div>
+    
+  <div class="big" style="width: 100%; height: 300px; display: flex; justify-content: center; align-items: center;" >
+    <div class="down2" style="display: flex;">
+      <div class="poke_calc">
+        <label for="">Search pokemon type : </label>
+        <input style="font-size: large; width: 100px;" type="text">
+        <div style="margin-top: 10px;" class="output"></div>
+      </div>
+    </div>
+
+    <div class="down1" style="display: flex; justify-content: center;">
+      <div class="game_message" style="margin: 10px;"></div>
+    </div>
+  </div>
+  
+      <div class="my_message"> Made with <i class="fa fa-heart" style="margin-left: 3px;"></i> </div>
+
     <script src="script.js"></script>
   </body>
 </html>

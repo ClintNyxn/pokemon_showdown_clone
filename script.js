@@ -226,9 +226,6 @@ function showInStatBox(x, p) {
     return { move_name, move_type, power, accuracy, priority, category };
   }
 
-function calculateDamage(who, move) {
-  if (gameOver) return 0;
-
   typeChart = {
     normal:   { rock: 0.5, ghost: 0, steel: 0.5 },
     fire:     { grass: 2, ice: 2, bug: 2, steel: 2, fire: 0.5, water: 0.5, rock: 0.5, dragon: 0.5 },
@@ -249,6 +246,10 @@ function calculateDamage(who, move) {
     steel:    { ice: 2, rock: 2, fairy: 2, fire: 0.5, water: 0.5, electric: 0.5, steel: 0.5 },
     fairy:    { fighting: 2, dragon: 2, dark: 2, fire: 0.5, poison: 0.5, steel: 0.5 }
   };
+
+function calculateDamage(who, move) {
+  if (gameOver) return 0;
+
 
   level = 50;
   random_factor = Math.random() * 0.15 + 0.85;
@@ -306,9 +307,9 @@ function calculateDamage(who, move) {
       gameOver = true;
 
       if (who == "user") {
-        setMessage("You win!!!!!");
+        setMessage("🎉 You win! All opponent Pokémon fainted!");
       } else {
-        setMessage("You lost!!!!!");
+        setMessage("💀 You lost! All your Pokémon fainted!");
       }
 
       return damage;
@@ -390,6 +391,27 @@ function calculateDamage(who, move) {
       CpuDecision();
     });
   });
+  const input = document.querySelector("input")
+  const output = document.querySelector(".output")
+  types = []
+  for(let i in typeChart){
+    types.push(i) 
+  }        
+
+  function showTypeAdv(){
+    input.addEventListener('input',()=>{
+      output.innerHTML = ""
+      if (types.includes(input.value)){
+        t = (typeChart[input.value])
+        tv = (Object.values(t))
+        tk = (Object.keys(t))
+        for (let i=0;i<tv.length;i++){
+          output.innerHTML +=  tv[i] + "x " + tk[i] + ", "
+        }
+      }
+    })
+  }showTypeAdv()
+
 }
 
 main();
